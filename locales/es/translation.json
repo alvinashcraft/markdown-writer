@@ -1,0 +1,63 @@
+{
+  "app": {
+    "title": "Markdown Writer",
+    "untitled": "Sin título"
+  },
+  "menu": {
+    "file": "Archivo",
+    "new": "Nuevo",
+    "open": "Abrir…",
+    "save": "Guardar",
+    "saveAs": "Guardar como…",
+    "exportHtml": "Exportar HTML",
+    "exportPdf": "Exportar PDF",
+    "edit": "Editar",
+    "bold": "Negrita",
+    "italic": "Cursiva",
+    "view": "Ver",
+    "toggleDarkMode": "Alternar modo oscuro",
+    "language": "Idioma"
+  },
+  "toolbar": {
+    "open": "Abrir",
+    "openTooltip": "Abrir archivo (Ctrl+O)",
+    "openTooltipMac": "Abrir archivo (⌘O)",
+    "save": "Guardar",
+    "saveTooltip": "Guardar archivo (Ctrl+S)",
+    "saveTooltipMac": "Guardar archivo (⌘S)",
+    "requiresDesktop": "Requiere la aplicación de escritorio",
+    "boldTooltip": "Negrita (Ctrl+B)",
+    "boldTooltipMac": "Negrita (⌘B)",
+    "italicTooltip": "Cursiva (Ctrl+I)",
+    "italicTooltipMac": "Cursiva (⌘I)",
+    "themeTooltip": "Alternar modo oscuro (Ctrl+Shift+D)",
+    "themeTooltipMac": "Alternar modo oscuro (⌘⇧D)",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "language": "Idioma"
+  },
+  "editor": {
+    "panelHeader": "Editor",
+    "previewHeader": "Vista previa"
+  },
+  "status": {
+    "words": "{{count}} palabras",
+    "chars": "{{count}} caracteres",
+    "selected": "({{count}} seleccionados)"
+  },
+  "dialog": {
+    "unsavedNew": "Tienes cambios sin guardar. ¿Crear un nuevo documento?",
+    "unsavedOpen": "Tienes cambios sin guardar. ¿Abrir otro archivo?",
+    "saveChanges": "¿Deseas guardar los cambios?",
+    "saveChangesDetail": "Los cambios se perderán si cierras sin guardar.",
+    "save": "Guardar",
+    "dontSave": "No guardar",
+    "cancel": "Cancelar"
+  },
+  "filter": {
+    "markdown": "Markdown",
+    "allFiles": "Todos los archivos",
+    "html": "HTML",
+    "pdf": "PDF"
+  }
+}

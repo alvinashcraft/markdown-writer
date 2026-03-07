@@ -61,7 +61,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   background: var(--bg-toolbar);
   color: var(--text-toolbar);
   border-bottom: 1px solid var(--border-toolbar);
@@ -78,31 +78,9 @@
   gap: 0.5rem;
 }
 
-.toolbar-btn {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border-toolbar);
-  border-radius: 4px;
-  background: var(--btn-bg);
+/* Fluent UI button overrides for toolbar */
+.toolbar .fui-Button {
   color: var(--text-toolbar);
-  cursor: pointer;
-  font-size: 0.875rem;
-  transition: background 0.2s;
-}
-
-.toolbar-btn:hover:not(:disabled) {
-  background: var(--btn-hover);
-}
-
-.toolbar-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.toolbar-divider {
-  width: 1px;
-  height: 1.5rem;
-  background: var(--border-toolbar);
-  margin: 0 0.25rem;
 }
 
 /* Split pane container */
@@ -136,25 +114,18 @@
   border-right: 1px solid var(--border-primary);
 }
 
-.editor-textarea {
+/* CodeMirror editor container */
+.editor-panel .cm-editor {
+  height: 100%;
   flex: 1;
-  padding: 1rem;
-  border: none;
-  resize: none;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  background: var(--bg-editor);
-  color: var(--text-primary);
 }
 
-.editor-textarea:focus {
+.editor-panel .cm-editor .cm-scroller {
+  overflow: auto;
+}
+
+.editor-panel .cm-editor.cm-focused {
   outline: none;
-  background: var(--bg-editor-focus);
-}
-
-.editor-textarea::placeholder {
-  color: var(--text-muted);
 }
 
 /* Preview panel */
@@ -283,4 +254,25 @@
 
 .status-info {
   opacity: 0.6;
+}
+
+/* macOS: semi-transparent toolbar for vibrancy effect */
+[data-platform="macos"] .toolbar {
+  background: rgba(45, 55, 72, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+[data-platform="macos"][data-theme="dark"] .toolbar {
+  background: rgba(17, 24, 39, 0.75);
+}
+
+[data-platform="macos"] .panel-header {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Windows: ensure Mica shows through where appropriate */
+[data-platform="windows"] .app {
+  background: transparent;
 }

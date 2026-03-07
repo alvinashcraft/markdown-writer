@@ -10,9 +10,19 @@ function onChannel(channel) {
 }
 
 contextBridge.exposeInMainWorld('electronAPI', {
+  // Platform identifier ('win32' | 'darwin' | 'linux')
+  platform: process.platform,
+
   // Request/response file operations
   openFile: () => ipcRenderer.invoke('file:open'),
   saveFile: (data) => ipcRenderer.invoke('file:save', data),
+
+  // Export operations
+  exportHtml: (data) => ipcRenderer.invoke('export:html', data),
+  exportPdf: (data) => ipcRenderer.invoke('export:pdf', data),
+
+  // Notify main process that a save completed (for close-after-save flow)
+  notifySaveComplete: () => ipcRenderer.send('save:complete'),
 
   // Menu event listeners (main→renderer)
   onMenuNew: onChannel('menu:new'),
@@ -21,4 +31,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onMenuSaveAs: onChannel('menu:save-as'),
   onMenuFormat: onChannel('menu:format'),
   onMenuToggleTheme: onChannel('menu:toggle-theme'),
+  onMenuExportHtml: onChannel('menu:export-html'),
+  onMenuExportPdf: onChannel('menu:export-pdf'),
+  onMenuLanguage: onChannel('menu:language'),
+
+  // Language (renderer → main)
+  setLanguage: (lng) => ipcRenderer.send('language:change', lng),
 });

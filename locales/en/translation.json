@@ -1,0 +1,63 @@
+{
+  "app": {
+    "title": "Markdown Writer",
+    "untitled": "Untitled"
+  },
+  "menu": {
+    "file": "File",
+    "new": "New",
+    "open": "Open…",
+    "save": "Save",
+    "saveAs": "Save As…",
+    "exportHtml": "Export HTML",
+    "exportPdf": "Export PDF",
+    "edit": "Edit",
+    "bold": "Bold",
+    "italic": "Italic",
+    "view": "View",
+    "toggleDarkMode": "Toggle Dark Mode",
+    "language": "Language"
+  },
+  "toolbar": {
+    "open": "Open",
+    "openTooltip": "Open file (Ctrl+O)",
+    "openTooltipMac": "Open file (⌘O)",
+    "save": "Save",
+    "saveTooltip": "Save file (Ctrl+S)",
+    "saveTooltipMac": "Save file (⌘S)",
+    "requiresDesktop": "Requires desktop app",
+    "boldTooltip": "Bold (Ctrl+B)",
+    "boldTooltipMac": "Bold (⌘B)",
+    "italicTooltip": "Italic (Ctrl+I)",
+    "italicTooltipMac": "Italic (⌘I)",
+    "themeTooltip": "Toggle dark mode (Ctrl+Shift+D)",
+    "themeTooltipMac": "Toggle dark mode (⌘⇧D)",
+    "light": "Light",
+    "dark": "Dark",
+    "language": "Language"
+  },
+  "editor": {
+    "panelHeader": "Editor",
+    "previewHeader": "Preview"
+  },
+  "status": {
+    "words": "{{count}} words",
+    "chars": "{{count}} chars",
+    "selected": "({{count}} selected)"
+  },
+  "dialog": {
+    "unsavedNew": "You have unsaved changes. Create a new document?",
+    "unsavedOpen": "You have unsaved changes. Open a different file?",
+    "saveChanges": "Do you want to save changes?",
+    "saveChangesDetail": "Your changes will be lost if you close without saving.",
+    "save": "Save",
+    "dontSave": "Don't Save",
+    "cancel": "Cancel"
+  },
+  "filter": {
+    "markdown": "Markdown",
+    "allFiles": "All Files",
+    "html": "HTML",
+    "pdf": "PDF"
+  }
+}
