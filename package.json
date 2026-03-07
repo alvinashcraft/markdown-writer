@@ -11,6 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "electron:dev": "concurrently -k \"vite\" \"wait-on tcp:5173 && electron .\"",
+    "electron:screenshot": "concurrently -k \"vite\" \"wait-on tcp:5173 && SCREENSHOT_MODE=1 electron .\"",
     "electron:preview": "vite build && electron .",
     "electron:build": "vite build && electron-builder",
     "electron:build:dir": "vite build && electron-builder --dir",
@@ -55,6 +56,7 @@
   "build": {
     "appId": "com.alvinashcraft.markdownwriter",
     "productName": "QuietMark",
+    "buildVersion": "2",
     "files": [
       "dist/**/*",
       "electron/**/*",

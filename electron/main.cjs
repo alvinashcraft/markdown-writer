@@ -10,16 +10,26 @@ let forceQuit = false;
 // Set the proper app name for macOS menus ("About", app menu title, etc.)
 app.name = 'QuietMark';
 
+app.setAboutPanelOptions({
+  applicationName: 'QuietMark',
+  applicationVersion: '1.0.0',
+  copyright: '© 2026 Alvin Ashcraft',
+  credits: 'A focused markdown editor with live preview.',
+});
+
 function createWindow() {
   const isMac = process.platform === 'darwin';
   const isWindows = process.platform === 'win32';
 
+  const screenshotMode = process.env.SCREENSHOT_MODE === '1';
+
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: screenshotMode ? 1280 : 1200,
+    height: screenshotMode ? 800 : 800,
     minWidth: 600,
     minHeight: 400,
     show: false,
+    ...(screenshotMode && { resizable: false }),
     icon: path.join(__dirname, '..', 'Assets', 'icon512.png'),
     backgroundColor: '#2d3748',
     title: 'QuietMark',
