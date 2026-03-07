@@ -7,6 +7,9 @@ const isDev = !app.isPackaged;
 let mainWindow;
 let forceQuit = false;
 
+// Set the proper app name for macOS menus ("About", app menu title, etc.)
+app.name = 'QuietMark';
+
 function createWindow() {
   const isMac = process.platform === 'darwin';
   const isWindows = process.platform === 'win32';
@@ -19,7 +22,7 @@ function createWindow() {
     show: false,
     icon: path.join(__dirname, '..', 'Assets', 'icon512.png'),
     backgroundColor: '#2d3748',
-    title: 'Markdown Writer',
+    title: 'QuietMark',
     // Native window material effects
     ...(isMac && {
       vibrancy: 'sidebar',
@@ -100,9 +103,10 @@ function buildMenu() {
   const isMac = process.platform === 'darwin';
   const t = i18n.t.bind(i18n);
 
+  const appName = 'QuietMark';
   const template = [
     ...(isMac
-      ? [{ label: app.name, submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'quit' }] }]
+      ? [{ label: appName, submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'quit' }] }]
       : []),
     {
       label: t('menu.file'),
@@ -293,6 +297,11 @@ ipcMain.on('language:change', (_event, lng) => {
 // --- App lifecycle ---
 
 app.whenReady().then(() => {
+  // Set macOS dock icon in dev mode (in production the bundled .app icon is used)
+  if (process.platform === 'darwin' && isDev) {
+    app.dock.setIcon(path.join(__dirname, '..', 'Assets', 'icon1024.png'));
+  }
+
   createWindow();
   buildMenu();
 

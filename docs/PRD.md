@@ -1,4 +1,4 @@
-# Markdown Writer — Product Requirements Document
+# QuietMark — Product Requirements Document
 
 ## MVP Goal
 A split-pane markdown editor where you type on the left and see live-formatted preview on the right, with a toolbar ready for future file operations.

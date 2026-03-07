@@ -10,3 +10,6 @@ release
 
 # Development certificate
 devcert.pfx
+
+# Apple provisioning profile
+build/embedded.provisionprofile

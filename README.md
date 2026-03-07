@@ -1,8 +1,8 @@
-# Markdown Writer
+# QuietMark
 
 A distraction-free markdown editor with live preview, built with React, Vite, and Electron. Features Fluent UI styling, CodeMirror 6 editing, and MSIX packaging for Windows.
 
-![Markdown Writer](markdown_editor_mvp.png)
+![QuietMark](markdown_editor_mvp.png)
 
 ## Features
 

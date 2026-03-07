@@ -1,6 +1,6 @@
 # Architecture
 
-Markdown Writer is a two-process Electron app with a React renderer.
+QuietMark is a two-process Electron app with a React renderer.
 
 ## Process Model
 
@@ -68,4 +68,4 @@ npm run msix:build       →  Vite build → electron-builder --dir → winapp p
 
 ## File Associations
 
-The MSIX manifest (`appxmanifest.xml`) registers `.md` and `.markdown` file types. When a user double-clicks a markdown file, Windows launches Markdown Writer with the file path as an argument. (Note: argument handling in `main.cjs` is a future enhancement.)
+The MSIX manifest (`appxmanifest.xml`) registers `.md` and `.markdown` file types. When a user double-clicks a markdown file, Windows launches QuietMark with the file path as an argument. (Note: argument handling in `main.cjs` is a future enhancement.)

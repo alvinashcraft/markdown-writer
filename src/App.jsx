@@ -50,7 +50,7 @@ const brandVariants = {
 const lightTheme = { ...createLightTheme(brandVariants) };
 const darkTheme = { ...createDarkTheme(brandVariants) };
 
-const STARTER_MARKDOWN = `# Welcome to Markdown Writer
+const STARTER_MARKDOWN = `# Welcome to QuietMark
 
 Start typing to see your **markdown** rendered in *real-time*!
 

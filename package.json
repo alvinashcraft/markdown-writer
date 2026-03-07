@@ -2,7 +2,7 @@
   "name": "markdown-writer",
   "private": true,
   "version": "0.1.0",
-  "description": "A distraction-free markdown editor with live preview",
+  "description": "QuietMark — A distraction-free markdown editor with live preview",
   "author": "alash",
   "type": "module",
   "main": "electron/main.cjs",
@@ -15,7 +15,9 @@
     "electron:build": "vite build && electron-builder",
     "electron:build:dir": "vite build && electron-builder --dir",
     "msix:pack": "npx winapp pack ./release/win-arm64-unpacked --generate-cert --output release/MarkdownWriter.msix",
-    "msix:build": "npm run electron:build:dir && npm run msix:pack"
+    "msix:build": "npm run electron:build:dir && npm run msix:pack",
+    "mas:build": "vite build && electron-builder --mac mas",
+    "mas:build:dir": "vite build && electron-builder --mac mas --dir"
   },
   "dependencies": {
     "@codemirror/commands": "^6.10.2",
@@ -37,7 +39,6 @@
     "react-i18next": "^16.5.6"
   },
   "devDependencies": {
-    "@microsoft/winappcli": "^0.2.0",
     "@vitejs/plugin-react": "^4.3.1",
     "concurrently": "^9.1.2",
     "electron": "^35.1.2",
@@ -45,12 +46,15 @@
     "vite": "^5.4.6",
     "wait-on": "^8.0.3"
   },
+  "optionalDependencies": {
+    "@microsoft/winappcli": "^0.2.0"
+  },
   "overrides": {
     "esbuild": "^0.25.0"
   },
   "build": {
-    "appId": "com.markdownwriter.app",
-    "productName": "Markdown Writer",
+    "appId": "com.alvinashcraft.markdownwriter",
+    "productName": "QuietMark",
     "files": [
       "dist/**/*",
       "electron/**/*",
@@ -65,7 +69,14 @@
     },
     "mac": {
       "icon": "Assets/icon1024.png",
-      "target": "dmg"
+      "target": "dmg",
+      "category": "public.app-category.productivity"
+    },
+    "mas": {
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+      "provisioningProfile": "build/embedded.provisionprofile",
+      "category": "public.app-category.productivity"
     }
   }
 }
