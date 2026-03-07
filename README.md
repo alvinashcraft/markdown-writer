@@ -1,244 +1,125 @@
-
 # Markdown Writer
 
-A split-pane markdown editor built with React + Vite. Type on the left, see live-formatted preview on the right.
+A distraction-free markdown editor with live preview, built with React, Vite, and Electron. Features Fluent UI styling, CodeMirror 6 editing, and MSIX packaging for Windows.
 
-## Quickstart
+![Markdown Writer](markdown_editor_mvp.png)
 
-**Option A — Codespaces**  
-1. Open this repo in GitHub and click **Code → Codespaces → Create codespace**.  
-2. The dev container installs Node and runs `npm install` automatically.  
-3. Run `npm run dev` to start the dev server.
+## Features
 
-**Option B — Local**  
-1. Install **Node.js 18+**.  
-2. `npm install`  
-3. `npm run dev`
+- **Live preview** — Split-pane editor with real-time rendered markdown
+- **CodeMirror 6 editor** — Syntax highlighting, line numbers, undo history, search
+- **Fluent UI** — Native-feeling interface with platform-adaptive styling (Mica on Windows, vibrancy on macOS)
+- **Dark mode** — System detection with manual toggle, persisted to localStorage
+- **File operations** — Open, Save, Save As with dirty-state tracking and unsaved-changes dialog
+- **Export** — Standalone HTML and PDF export via File menu
+- **Auto-save** — Drafts saved to localStorage with debounced writes; crash recovery on restart
+- **Word & character count** — Status bar with live word/char counts and selection stats
+- **Localization** — English and Spanish with framework for adding more languages
+- **Keyboard shortcuts** — Standard accelerators (Ctrl/⌘+S, O, N, B, I, Shift+D)
+- **MSIX packaging** — Windows packaging with winapp CLI, file associations for `.md`/`.markdown`
 
-Then open the URL shown in your terminal.
+## Getting Started
 
-## Structure
+### Prerequisites
 
-```
-.
-├── .devcontainer/
-│   └── devcontainer.json
-├── .github/
-│   ├── agents/                      # Custom Copilot agents
-│   │   ├── idea-generator.agent.md  # @idea-generator
-│   │   ├── mvp-kickoff.agent.md     # @mvp-kickoff
-│   │   └── mvp-builder.agent.md     # Implementation reference
-│   ├── prompts/                     # Slash command prompts
-│   │   ├── install.prompt.md        # /install
-│   │   ├── ideate.prompt.md         # /ideate
-│   │   ├── prd.prompt.md            # /prd
-│   │   ├── build.prompt.md          # /build
-│   │   ├── start.prompt.md          # /start
-│   │   ├── export.prompt.md         # /export
-│   │   └── mvp-kickoff.prompt.md    # /mvp-kickoff (legacy)
-│   └── copilot-instructions.md      # Workspace instructions
-├── src/
-│   ├── App.jsx
-│   └── main.jsx
-├── index.html
-├── package.json
-├── vite.config.js
-├── .gitignore
-├── .editorconfig
-└── README.md
-```
+- [Node.js](https://nodejs.org/) 18+
+- npm (included with Node.js)
 
-## Express Version
+### Install
 
-This repo includes **custom Copilot agents** and **slash command prompts** that guide you through a structured workflow from ideation to implementation. The workflow helps you build a one-hour MVP with minimal friction.
-
-### 🎯 Complete Workflow (6 Steps) (Using Slash Commands)
-
-The easiest way to get started is using slash commands. Type `/` in chat to see available commands:
-
-#### Step 0: Setup (First Time Only)
-If you're running locally (not in Codespaces), install dependencies first:
-
-```
-/install
-```
-
-#### Step 1: Ideate (`/ideate`)
-Brainstorm and discover compelling MVP ideas through guided conversation.
-
-```
-/ideate
-```
-
-The command will:
-- Launch the `@idea-generator` agent
-- Ask about your interests, skill level, and goals
-- Generate 3-5 concrete, feasible ideas across different categories
-- Help you refine and choose the best idea
-- Hand off to planning with a clear one-sentence goal
-
-#### Step 2: Create PRD (`/prd`)
-Create a detailed implementation plan with a PRD document.
-
-```
-/prd
-```
-
-The command will:
-- Launch the `@mvp-kickoff` agent
-- Confirm the MVP goal and scope (~1 hour feasibility)
-- Identify the ONE core user action
-- Break down UI components, state, and data requirements
-- Propose 3-5 clear implementation steps
-- Generate a `PRD.md` file after your confirmation
-
-#### Step 3: Build MVP (`/build`)
-Build the MVP following the PRD steps.
-
-```
-/build
-```
-
-The command will:
-- Launch the `@agent` with pre-configured editing tools
-- Read PRD.md to understand requirements
-- Implement the code step-by-step in `src/App.jsx`
-- Run `npm run dev` to test
-- Verify everything works with no console errors
-
-#### Step 4: Start Server (`/start`)
-Launch the development server to test your MVP.
-
-```
-/start
-```
-
-The command will:
-- Run `npm run dev` in the terminal
-- Wait for the server to start
-- Provide the local URL (typically `http://localhost:5173`)
-- Confirm the server is ready
-
-#### Step 5: Export Your Work (`/export`)
-Download your MVP workspace as a ZIP file.
-
-```
-/export
-```
-
-The command will guide you through:
-- Opening the Command Palette
-- Using "Codespaces: Download Current Workspace"
-- Saving the ZIP file with all your work
-- What's included and next steps for deployment
-
-### 🔧 Alternative: Using Agents Directly
-
-You can also invoke agents directly if you prefer more control:
-
-**Ideation:**
-```
-@idea-generator I want to build something fun for my portfolio
-```
-
-**Planning:**
-```
-@mvp-kickoff Build a Speed Reader app where users paste text and read words one-at-a-time
-```
-
-**Implementation:**
-```
-@agent Implement the MVP plan from PRD.md
-```
-
-Or use inline chat (`Ctrl+I`) directly in `src/App.jsx` to build step-by-step.
-
-### 🚀 Quick Commands
-
-**Workflow Commands:**
 ```bash
-/install     # Install dependencies (first time only)
-/ideate      # Brainstorm MVP ideas
-/prd         # Create implementation plan
-/build       # Implement the code
-/start       # Start the dev server
-/export      # Download or push to your GitHub repo
+git clone <repo-url>
+cd markdown-writer
+npm install
 ```
 
-**Manual NPM Commands:**
+### Development
+
 ```bash
-# Start development server
+# Web only (browser)
 npm run dev
 
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+# Electron desktop app
+npm run electron:dev
 ```
 
-The dev server runs on `http://localhost:5173` by default.
-
-### 📁 Customization Files
-
-**Slash Command Prompts** (`.github/prompts/`):
-- `/install` → `install.prompt.md` - Install dependencies
-- `/ideate` → `ideate.prompt.md` - Launch idea generator
-- `/prd` → `prd.prompt.md` - Create implementation plan
-- `/build` → `build.prompt.md` - Implement the MVP
-- `/start` → `start.prompt.md` - Start dev server
-- `/export` → `export.prompt.md` - Download or push to GitHub
-- `/mvp-kickoff` → `mvp-kickoff.prompt.md` - Alternative planning prompt
-
-**Custom Agents** (`.github/agents/`):
-- `@idea-generator` → `idea-generator.agent.md` - Brainstorm MVP ideas
-- `@mvp-kickoff` → `mvp-kickoff.agent.md` - Plan and create PRD
-- `mvp-builder.agent.md` - Implementation guidelines (reference)
-
-### 💡 Tips for Using the Workflow
-
-- **Start with `/ideate`** if you need help choosing what to build
-- **Use slash commands** for the simplest experience with pre-configured tools
-- **Follow the sequence**: `/ideate` → `/prd` → `/build`
-- **Be specific**: The more context you provide, the better the results
-- **Iterate**: Don't hesitate to ask follow-up questions or refine ideas
-- **Use handoffs**: Agents provide handoff buttons to seamlessly transition between phases
-- **Keep scope minimal**: The workflow is designed to keep your MVP achievable in ~1 hour
-
-## Copilot Instructions
-
-This repo also includes **custom Copilot instructions** in `.github/copilot-instructions.md` that provide:
-
-- **Scope guardrails** — Keep it minimal, one clear user action
-- **Tech preferences** — Plain React + Vite, avoid heavy frameworks
-- **Build flow guidance** — 5-step structured approach
-- **Quality standards** — Works locally, builds cleanly, no console errors
-
-The instructions work automatically in the background to guide all Copilot interactions in this workspace.
-
-## Tips
-
-- **Start with `/ideate`** if you need help choosing what to build
-- **Use slash commands** for everything - no need to touch the terminal!
-- **Complete workflow**: `/install` (first time) → `/ideate` → `/prd` → `/build` → `/start` → `/export`
-- **Working in Codespaces?** Use `/export` to download or push to your personal GitHub repo
-- Delete anything you don't need. Keep it **lean**.
-- Aim for a **single, clear MVP** first (one page, one core action).
-- If you need routing later, add it (e.g., `react-router-dom`) *after* your MVP works. If you want to submit your project to be aggregated, you need to use HashRouter.
-- See the Prompt to Prototype Challenge Submission Repo at [https://aka.ms/skillupai/ptp/submissions/repo](https://aka.ms/skillupai/ptp/submissions/repo) to learn more.
-
-## Quick Example
+### Build & Package
 
 ```bash
-# In VS Code Chat (no terminal needed!):
-/install                   # First time: install dependencies
-/ideate                    # Brainstorm ideas → choose "Speed Reader"
-/prd                       # Create PRD.md with implementation plan
-/build                     # Implement the code
-/start                     # Start dev server → get URL
-# Open URL in browser → Test your MVP!
-/export                    # Download ZIP or push to your GitHub repo
-``` 
+# Production web build
+npm run build
+
+# Electron installer (NSIS)
+npm run electron:build
+
+# Windows MSIX package
+npm run msix:build
+```
+
+## Project Structure
+
+```
+├── electron/
+│   ├── main.cjs          # Electron main process (menus, IPC, file/export handlers)
+│   ├── preload.cjs        # Context bridge (secure IPC API)
+│   └── i18n-main.cjs      # Main process i18n config
+├── src/
+│   ├── App.jsx            # Main React component (UI, state, handlers)
+│   ├── App.css            # Styles with CSS custom properties (light/dark themes)
+│   ├── Editor.jsx         # CodeMirror 6 wrapper (imperative handle, theme switching)
+│   ├── i18n.js            # Renderer i18n config (language detection, persistence)
+│   └── main.jsx           # React entry point
+├── locales/
+│   ├── en/translation.json
+│   └── es/translation.json
+├── Assets/                # App icons and MSIX tile images
+├── docs/                  # Additional documentation
+├── appxmanifest.xml       # MSIX package manifest
+├── winapp.yaml            # Windows SDK configuration
+├── index.html             # HTML shell with splash screen
+├── vite.config.js         # Vite configuration
+└── package.json           # Dependencies, scripts, electron-builder config
+```
+
+## Scripts
+
+| Script | Description |
+|---|---|
+| `npm run dev` | Start Vite dev server (browser) |
+| `npm run build` | Production web build |
+| `npm run electron:dev` | Run Electron with hot-reload |
+| `npm run electron:preview` | Build + run Electron (no hot-reload) |
+| `npm run electron:build` | Build Electron installer (NSIS) |
+| `npm run electron:build:dir` | Build Electron unpacked directory |
+| `npm run msix:build` | Full MSIX pipeline (build + pack + sign) |
+| `npm run msix:pack` | Pack existing build as MSIX |
+
+## MSIX Installation (Windows)
+
+To install the dev-signed MSIX locally:
+
+```bash
+# Install the dev certificate (one-time, requires admin terminal)
+npx winapp cert install ./devcert.pfx
+
+# Then install the MSIX
+# Double-click release/MarkdownWriter.msix
+```
+
+## Adding a Language
+
+1. Copy `locales/en/translation.json` to `locales/<code>/translation.json`
+2. Translate all values
+3. Add the language to `SUPPORTED_LANGUAGES` in `src/i18n.js`
+4. Add a menu entry in `buildMenu()` in `electron/main.cjs`
+
+## Tech Stack
+
+- **Frontend**: React 18, Vite 5, CodeMirror 6, Fluent UI v9
+- **Desktop**: Electron 35, electron-builder
+- **Markdown**: marked + DOMPurify (XSS protection)
+- **i18n**: i18next + react-i18next
+- **Packaging**: winapp CLI (MSIX), electron-builder (NSIS/DMG)
 
 ## License
 
