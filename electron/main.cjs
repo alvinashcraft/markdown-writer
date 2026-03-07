@@ -17,6 +17,7 @@ function createWindow() {
     minWidth: 600,
     minHeight: 400,
     show: false,
+    icon: path.join(__dirname, '..', 'Assets', 'icon512.png'),
     backgroundColor: '#2d3748',
     title: 'Markdown Writer',
     // Native window material effects
