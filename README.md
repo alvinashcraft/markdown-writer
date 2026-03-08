@@ -103,7 +103,7 @@ To install the dev-signed MSIX locally:
 npx winapp cert install ./devcert.pfx
 
 # Then install the MSIX
-# Double-click release/MarkdownWriter.msix
+# Double-click release/QuietMark.msix
 ```
 
 ## Adding a Language

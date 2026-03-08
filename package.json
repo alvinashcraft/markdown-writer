@@ -15,7 +15,7 @@
     "electron:preview": "vite build && electron .",
     "electron:build": "vite build && electron-builder",
     "electron:build:dir": "vite build && electron-builder --dir",
-    "msix:pack": "npx winapp pack ./release/win-arm64-unpacked --generate-cert --output release/MarkdownWriter.msix",
+    "msix:pack": "npx winapp pack ./release/win-arm64-unpacked --generate-cert --output release/QuietMark.msix",
     "msix:build": "npm run electron:build:dir && npm run msix:pack",
     "mas:build": "vite build && electron-builder --mac mas",
     "mas:build:dir": "vite build && electron-builder --mac mas --dir"

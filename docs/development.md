@@ -43,7 +43,7 @@ npm run msix:pack                # Pack into signed MSIX
 # One-time: trust the dev certificate (admin terminal required)
 npx winapp cert install ./devcert.pfx
 
-# Then double-click release/MarkdownWriter.msix
+# Then double-click release/QuietMark.msix
 ```
 
 ## Adding a New Language
