@@ -111,6 +111,7 @@ function createWindow() {
 
 function buildMenu() {
   const isMac = process.platform === 'darwin';
+  const isWindows = process.platform === 'win32';
   const t = i18n.t.bind(i18n);
 
   const appName = 'QuietMark';
@@ -169,6 +170,14 @@ function buildMenu() {
         { role: 'resetZoom' },
       ],
     },
+    ...(isWindows
+      ? [
+          {
+            label: 'Help',
+            submenu: [{ label: 'About QuietMark', click: () => app.showAboutPanel() }],
+          },
+        ]
+      : []),
   ];
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
