@@ -6,6 +6,8 @@ const i18n = require('./i18n-main.cjs');
 const isDev = !app.isPackaged;
 let mainWindow;
 let forceQuit = false;
+let isQuitting = false;
+let currentTitle = 'QuietMark';
 
 // Set the proper app name for macOS menus ("About", app menu title, etc.)
 app.name = 'QuietMark';
@@ -22,6 +24,8 @@ function createWindow() {
   const isWindows = process.platform === 'win32';
 
   const screenshotMode = process.env.SCREENSHOT_MODE === '1';
+
+  forceQuit = false;
 
   mainWindow = new BrowserWindow({
     width: screenshotMode ? 1280 : 1200,
@@ -55,14 +59,25 @@ function createWindow() {
   mainWindow.on('close', (e) => {
     if (forceQuit) return;
 
+    // Capture and reset quit intent so a cancelled dialog doesn't stick
+    const wasQuitting = isQuitting;
+    isQuitting = false;
     e.preventDefault();
+
+    const proceedWithClose = () => {
+      forceQuit = true;
+      if (wasQuitting) {
+        app.quit();
+      } else {
+        mainWindow.close();
+      }
+    };
 
     mainWindow.webContents
       .executeJavaScript('document.title.startsWith("●")')
       .then((hasUnsaved) => {
         if (!hasUnsaved) {
-          forceQuit = true;
-          mainWindow.close();
+          proceedWithClose();
           return;
         }
 
@@ -81,22 +96,28 @@ function createWindow() {
         if (result.response === 0) {
           // Save then close
           mainWindow.webContents.send('menu:save');
-          const closeAfterSave = () => {
-            forceQuit = true;
-            mainWindow.close();
-          };
+          const closeAfterSave = () => proceedWithClose();
           ipcMain.once('save:complete', closeAfterSave);
           setTimeout(() => ipcMain.removeListener('save:complete', closeAfterSave), 30000);
         } else if (result.response === 1) {
           // Don't Save — force close
-          forceQuit = true;
-          mainWindow.close();
+          proceedWithClose();
         }
       })
       .catch(() => {
-        forceQuit = true;
-        mainWindow.close();
+        proceedWithClose();
       });
+  });
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
+
+  mainWindow.webContents.on('page-title-updated', (_event, title) => {
+    if (currentTitle !== title) {
+      currentTitle = title;
+      buildMenu();
+    }
   });
 
   if (isDev) {
@@ -106,6 +127,31 @@ function createWindow() {
     });
   } else {
     mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  }
+}
+
+function ensureMainWindow() {
+  if (mainWindow === null || mainWindow.isDestroyed()) {
+    createWindow();
+    return;
+  }
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.show();
+  mainWindow.focus();
+}
+
+// Send IPC to the renderer, recreating the window first if needed
+function sendToRenderer(channel, ...args) {
+  if (mainWindow === null || mainWindow.isDestroyed()) {
+    createWindow();
+    mainWindow.webContents.once('did-finish-load', () => {
+      mainWindow.webContents.send(channel, ...args);
+    });
+  } else {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.show();
+    mainWindow.focus();
+    mainWindow.webContents.send(channel, ...args);
   }
 }
 
@@ -122,14 +168,14 @@ function buildMenu() {
     {
       label: t('menu.file'),
       submenu: [
-        { label: t('menu.new'), accelerator: 'CmdOrCtrl+N', click: () => mainWindow?.webContents.send('menu:new') },
-        { label: t('menu.open'), accelerator: 'CmdOrCtrl+O', click: () => mainWindow?.webContents.send('menu:open') },
+        { label: t('menu.new'), accelerator: 'CmdOrCtrl+N', click: () => sendToRenderer('menu:new') },
+        { label: t('menu.open'), accelerator: 'CmdOrCtrl+O', click: () => sendToRenderer('menu:open') },
         { type: 'separator' },
-        { label: t('menu.save'), accelerator: 'CmdOrCtrl+S', click: () => mainWindow?.webContents.send('menu:save') },
-        { label: t('menu.saveAs'), accelerator: 'CmdOrCtrl+Shift+S', click: () => mainWindow?.webContents.send('menu:save-as') },
+        { label: t('menu.save'), accelerator: 'CmdOrCtrl+S', click: () => sendToRenderer('menu:save') },
+        { label: t('menu.saveAs'), accelerator: 'CmdOrCtrl+Shift+S', click: () => sendToRenderer('menu:save-as') },
         { type: 'separator' },
-        { label: t('menu.exportHtml'), accelerator: 'CmdOrCtrl+Shift+E', click: () => mainWindow?.webContents.send('menu:export-html') },
-        { label: t('menu.exportPdf'), accelerator: 'CmdOrCtrl+Shift+P', click: () => mainWindow?.webContents.send('menu:export-pdf') },
+        { label: t('menu.exportHtml'), accelerator: 'CmdOrCtrl+Shift+E', click: () => sendToRenderer('menu:export-html') },
+        { label: t('menu.exportPdf'), accelerator: 'CmdOrCtrl+Shift+P', click: () => sendToRenderer('menu:export-pdf') },
         { type: 'separator' },
         ...(isMac ? [] : [{ role: 'quit' }]),
       ],
@@ -145,20 +191,20 @@ function buildMenu() {
         { role: 'paste' },
         { role: 'selectAll' },
         { type: 'separator' },
-        { label: t('menu.bold'), accelerator: 'CmdOrCtrl+B', click: () => mainWindow?.webContents.send('menu:format', 'bold') },
-        { label: t('menu.italic'), accelerator: 'CmdOrCtrl+I', click: () => mainWindow?.webContents.send('menu:format', 'italic') },
+        { label: t('menu.bold'), accelerator: 'CmdOrCtrl+B', click: () => sendToRenderer('menu:format', 'bold') },
+        { label: t('menu.italic'), accelerator: 'CmdOrCtrl+I', click: () => sendToRenderer('menu:format', 'italic') },
       ],
     },
     {
       label: t('menu.view'),
       submenu: [
-        { label: t('menu.toggleDarkMode'), accelerator: 'CmdOrCtrl+Shift+D', click: () => mainWindow?.webContents.send('menu:toggle-theme') },
+        { label: t('menu.toggleDarkMode'), accelerator: 'CmdOrCtrl+Shift+D', click: () => sendToRenderer('menu:toggle-theme') },
         { type: 'separator' },
         {
           label: t('menu.language'),
           submenu: [
-            { label: 'English', type: 'radio', checked: i18n.language === 'en', click: () => mainWindow?.webContents.send('menu:language', 'en') },
-            { label: 'Español', type: 'radio', checked: i18n.language === 'es', click: () => mainWindow?.webContents.send('menu:language', 'es') },
+            { label: 'English', type: 'radio', checked: i18n.language === 'en', click: () => sendToRenderer('menu:language', 'en') },
+            { label: 'Español', type: 'radio', checked: i18n.language === 'es', click: () => sendToRenderer('menu:language', 'es') },
           ],
         },
         { type: 'separator' },
@@ -170,6 +216,17 @@ function buildMenu() {
         { role: 'resetZoom' },
       ],
     },
+    ...(isMac
+      ? [{
+          label: t('menu.window'),
+          submenu: [
+            { role: 'minimize' },
+            { role: 'zoom' },
+            { type: 'separator' },
+            { label: currentTitle || t('menu.mainWindow'), click: () => ensureMainWindow() },
+          ],
+        }]
+      : []),
     ...(isWindows
       ? [
           {
@@ -186,7 +243,8 @@ function buildMenu() {
 // --- IPC: file operations ---
 
 ipcMain.handle('file:open', async () => {
-  const result = await dialog.showOpenDialog(mainWindow, {
+  const parentWindow = mainWindow && !mainWindow.isDestroyed() ? mainWindow : null;
+  const result = await dialog.showOpenDialog(parentWindow, {
     properties: ['openFile'],
     filters: [
       { name: i18n.t('filter.markdown'), extensions: ['md', 'markdown', 'txt'] },
@@ -202,7 +260,8 @@ ipcMain.handle('file:open', async () => {
 ipcMain.handle('file:save', async (_event, { content, filePath }) => {
   let savePath = filePath;
   if (!savePath) {
-    const result = await dialog.showSaveDialog(mainWindow, {
+    const parentWindow = mainWindow && !mainWindow.isDestroyed() ? mainWindow : null;
+    const result = await dialog.showSaveDialog(parentWindow, {
       filters: [
         { name: i18n.t('filter.markdown'), extensions: ['md'] },
         { name: i18n.t('filter.allFiles'), extensions: ['*'] },
@@ -260,7 +319,8 @@ ${html}
 
 ipcMain.handle('export:html', async (_event, { html, title }) => {
   const fullHtml = wrapHtmlTemplate(html, title);
-  const result = await dialog.showSaveDialog(mainWindow, {
+  const parentWindow = mainWindow && !mainWindow.isDestroyed() ? mainWindow : null;
+  const result = await dialog.showSaveDialog(parentWindow, {
     defaultPath: title.replace(/\.md$/i, '') + '.html',
     filters: [{ name: i18n.t('filter.html'), extensions: ['html'] }],
   });
@@ -271,7 +331,8 @@ ipcMain.handle('export:html', async (_event, { html, title }) => {
 
 ipcMain.handle('export:pdf', async (_event, { html, title }) => {
   const fullHtml = wrapHtmlTemplate(html, title);
-  const result = await dialog.showSaveDialog(mainWindow, {
+  const parentWindow = mainWindow && !mainWindow.isDestroyed() ? mainWindow : null;
+  const result = await dialog.showSaveDialog(parentWindow, {
     defaultPath: title.replace(/\.md$/i, '') + '.pdf',
     filters: [{ name: i18n.t('filter.pdf'), extensions: ['pdf'] }],
   });
@@ -327,6 +388,10 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+});
+
+app.on('before-quit', () => {
+  isQuitting = true;
 });
 
 app.on('window-all-closed', () => {

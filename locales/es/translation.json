@@ -16,7 +16,9 @@
     "italic": "Cursiva",
     "view": "Ver",
     "toggleDarkMode": "Alternar modo oscuro",
-    "language": "Idioma"
+    "language": "Idioma",
+    "window": "Ventana",
+    "mainWindow": "Ventana principal"
   },
   "toolbar": {
     "open": "Abrir",

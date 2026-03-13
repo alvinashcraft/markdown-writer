@@ -56,7 +56,7 @@
   "build": {
     "appId": "com.alvinashcraft.markdownwriter",
     "productName": "QuietMark",
-    "buildVersion": "2",
+    "buildVersion": "3",
     "files": [
       "dist/**/*",
       "electron/**/*",

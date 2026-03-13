@@ -13,3 +13,6 @@ devcert.pfx
 
 # Apple provisioning profile
 build/embedded.provisionprofile
+
+# Internal testing notes
+docs/testing-notes
