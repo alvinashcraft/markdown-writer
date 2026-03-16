@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
 
   // Request/response file operations
+  readFile: (filePath) => ipcRenderer.invoke('file:read', filePath),
   openFile: () => ipcRenderer.invoke('file:open'),
   saveFile: (data) => ipcRenderer.invoke('file:save', data),
 

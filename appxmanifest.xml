@@ -12,13 +12,13 @@
   IgnorableNamespaces="uap uap2 uap3 uap10 desktop desktop6 rescap">
 
   <Identity
-    Name="markdown-writer"
-    Publisher="CN=alash"
+    Name="20774Alvinitech.QuietMark"
+    Publisher="CN=EAE06486-0370-4160-9E62-540EA1588D22"
     Version="1.0.0.0" />
 
   <Properties>
     <DisplayName>QuietMark</DisplayName>
-    <PublisherDisplayName>alash</PublisherDisplayName>
+    <PublisherDisplayName>Alvinitech</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

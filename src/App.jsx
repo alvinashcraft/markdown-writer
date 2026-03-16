@@ -76,17 +76,25 @@ Happy writing! ✍️
 `;
 
 const DRAFT_KEY = 'md-writer-draft';
+const LAST_FILE_KEY = 'md-writer-last-file';
+const HAS_LAUNCHED_KEY = 'md-writer-has-launched';
 const isElectron = !!window.electronAPI;
 
 function App() {
   const { t, i18n } = useTranslation();
+
+  // Browser: restore draft or show welcome. Electron: always start with welcome
+  // (the init effect below will replace it before the window is shown).
   const [markdownText, setMarkdownText] = useState(() => {
-    const draft = localStorage.getItem(DRAFT_KEY);
-    if (draft && draft !== STARTER_MARKDOWN) return draft;
+    if (!isElectron) {
+      const draft = localStorage.getItem(DRAFT_KEY);
+      if (draft && draft !== STARTER_MARKDOWN) return draft;
+    }
     return STARTER_MARKDOWN;
   });
   const [currentFilePath, setCurrentFilePath] = useState(null);
   const [savedContent, setSavedContent] = useState(STARTER_MARKDOWN);
+  const [isInitializing, setIsInitializing] = useState(isElectron);
   const [theme, setTheme] = useState(() => {
     return (
       localStorage.getItem('md-writer-theme') ||
@@ -113,6 +121,49 @@ function App() {
   // Ref keeps latest state accessible to stable callbacks (avoids stale closures)
   const stateRef = useRef();
   stateRef.current = { markdownText, currentFilePath, savedContent };
+
+  // --- Electron startup: restore last file or start blank ---
+  useEffect(() => {
+    if (!isElectron) return;
+
+    const hasLaunched = localStorage.getItem(HAS_LAUNCHED_KEY);
+    if (!hasLaunched) {
+      // First-ever launch — keep the welcome markdown
+      localStorage.setItem(HAS_LAUNCHED_KEY, '1');
+      setIsInitializing(false);
+      return;
+    }
+
+    const lastFile = localStorage.getItem(LAST_FILE_KEY);
+    if (lastFile) {
+      window.electronAPI.readFile(lastFile).then((result) => {
+        if (result) {
+          setMarkdownText(result.content);
+          setSavedContent(result.content);
+          setCurrentFilePath(result.filePath);
+        } else {
+          // File no longer exists — start blank
+          setMarkdownText('');
+          setSavedContent('');
+          setCurrentFilePath(null);
+          localStorage.removeItem(LAST_FILE_KEY);
+        }
+        localStorage.removeItem(DRAFT_KEY);
+        setIsInitializing(false);
+      });
+    } else {
+      // No last file — check for an unsaved draft, otherwise start blank
+      const draft = localStorage.getItem(DRAFT_KEY);
+      if (draft) {
+        setMarkdownText(draft);
+        setSavedContent('');
+      } else {
+        setMarkdownText('');
+        setSavedContent('');
+      }
+      setIsInitializing(false);
+    }
+  }, []);
 
   const hasUnsaved = markdownText !== savedContent;
   const fileName = currentFilePath ? currentFilePath.split(/[/\\]/).pop() : t('app.untitled');
@@ -152,7 +203,8 @@ function App() {
 
   // --- Debounced auto-save to localStorage ---
   useEffect(() => {
-    if (markdownText === STARTER_MARKDOWN) {
+    if (isInitializing) return;
+    if (markdownText === STARTER_MARKDOWN || currentFilePath) {
       localStorage.removeItem(DRAFT_KEY);
       return;
     }
@@ -160,7 +212,17 @@ function App() {
       localStorage.setItem(DRAFT_KEY, markdownText);
     }, 500);
     return () => clearTimeout(timer);
-  }, [markdownText]);
+  }, [markdownText, isInitializing, currentFilePath]);
+
+  // --- Persist last file path whenever it changes ---
+  useEffect(() => {
+    if (isInitializing) return;
+    if (currentFilePath) {
+      localStorage.setItem(LAST_FILE_KEY, currentFilePath);
+    } else {
+      localStorage.removeItem(LAST_FILE_KEY);
+    }
+  }, [currentFilePath, isInitializing]);
 
   // --- File operations (read from stateRef for current values) ---
   const handleNew = useCallback(() => {
@@ -170,6 +232,7 @@ function App() {
     setSavedContent('');
     setCurrentFilePath(null);
     localStorage.removeItem(DRAFT_KEY);
+    localStorage.removeItem(LAST_FILE_KEY);
   }, []);
 
   const handleOpen = useCallback(async () => {

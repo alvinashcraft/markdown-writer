@@ -4,6 +4,23 @@ const fs = require('fs');
 const i18n = require('./i18n-main.cjs');
 
 const isDev = !app.isPackaged;
+
+// Resolve the user's Documents folder, preferring OneDrive Documents on Windows
+function getDocumentsPath() {
+  if (process.platform === 'win32') {
+    // The OneDrive env var points to the user's OneDrive root when installed
+    const oneDriveRoot = process.env.OneDrive;
+    if (oneDriveRoot) {
+      const oneDriveDocs = path.join(oneDriveRoot, 'Documents');
+      try {
+        if (fs.statSync(oneDriveDocs).isDirectory()) return oneDriveDocs;
+      } catch { /* not found, fall through */ }
+    }
+  }
+  // Fallback: Electron's built-in documents path (works on all platforms)
+  return app.getPath('documents');
+}
+
 let mainWindow;
 let forceQuit = false;
 let isQuitting = false;
@@ -242,6 +259,15 @@ function buildMenu() {
 
 // --- IPC: file operations ---
 
+ipcMain.handle('file:read', async (_event, filePath) => {
+  try {
+    const content = (await fs.promises.readFile(filePath, 'utf-8')).replace(/\r\n/g, '\n');
+    return { filePath, content };
+  } catch {
+    return null;
+  }
+});
+
 ipcMain.handle('file:open', async () => {
   const parentWindow = mainWindow && !mainWindow.isDestroyed() ? mainWindow : null;
   const result = await dialog.showOpenDialog(parentWindow, {
@@ -253,7 +279,7 @@ ipcMain.handle('file:open', async () => {
   });
   if (result.canceled) return null;
   const filePath = result.filePaths[0];
-  const content = await fs.promises.readFile(filePath, 'utf-8');
+  const content = (await fs.promises.readFile(filePath, 'utf-8')).replace(/\r\n/g, '\n');
   return { filePath, content };
 });
 
@@ -262,6 +288,7 @@ ipcMain.handle('file:save', async (_event, { content, filePath }) => {
   if (!savePath) {
     const parentWindow = mainWindow && !mainWindow.isDestroyed() ? mainWindow : null;
     const result = await dialog.showSaveDialog(parentWindow, {
+      defaultPath: getDocumentsPath(),
       filters: [
         { name: i18n.t('filter.markdown'), extensions: ['md'] },
         { name: i18n.t('filter.allFiles'), extensions: ['*'] },
