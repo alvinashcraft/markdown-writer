@@ -5,7 +5,29 @@ All notable changes to QuietMark will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] — Unreleased
+## [1.1.0] — 2026-03-16
+
+### Added
+
+- **Window menu (macOS)** — Standard Window menu with Minimize, Zoom, and a dynamic entry showing the current document title to reopen the main window after closing
+- **Last file restore (Electron)** — Reopens the most recently edited file on launch; persisted via localStorage
+- **`file:read` IPC channel** — New preload API for reading a file by path, used for last-file restore
+- **Welcome text on first launch only** — Starter markdown is shown only on the first launch; subsequent launches restore the last file or start blank
+- **Per-architecture MSIX scripts** — Separate `msix:build:x64` and `msix:build:arm64` npm scripts with `winapp pack --arch` for correct manifest stamping
+
+### Fixed
+
+- **Menu errors after window close (macOS)** — Cleared destroyed `BrowserWindow` reference on close; menu actions now recreate the window instead of erroring
+- **Quit from app menu (macOS)** — `QuietMark > Quit` now fully quits the app instead of leaving it lingering in the dock
+- **Save dialog default path (Windows)** — Save As now defaults to the user's Documents folder, preferring OneDrive Documents when available
+- **CRLF normalization** — File reads now normalize `\r\n` to `\n` to prevent false dirty-state detection on Windows
+- **Auto-save draft logic** — Drafts are no longer saved to localStorage when editing a named file, preventing stale draft restoration
+
+### Changed
+
+- **MSIX architecture handling** — `appxmanifest.xml` uses `ProcessorArchitecture="neutral"` as a base; actual architecture set at pack time via `--arch` flag
+
+## [1.0.0] — 2026-03-07
 
 First public release of QuietMark as a desktop application.
 
