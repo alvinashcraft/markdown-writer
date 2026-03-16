@@ -14,8 +14,8 @@
   <Identity
     Name="20774Alvinitech.QuietMark"
     Publisher="CN=EAE06486-0370-4160-9E62-540EA1588D22"
-    Version="1.0.0.0"
-    ProcessorArchitecture="arm64" />
+    Version="1.1.0.0"
+    ProcessorArchitecture="neutral" />
 
   <Properties>
     <DisplayName>QuietMark</DisplayName>

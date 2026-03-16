@@ -1,7 +1,7 @@
 {
   "name": "markdown-writer",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "QuietMark — A distraction-free markdown editor with live preview",
   "author": "alash",
   "type": "module",
@@ -15,8 +15,12 @@
     "electron:preview": "vite build && electron .",
     "electron:build": "vite build && electron-builder",
     "electron:build:dir": "vite build && electron-builder --dir",
-    "msix:pack": "npx winapp pack ./release/win-arm64-unpacked --generate-cert --output release/QuietMark.msix",
-    "msix:build": "npm run electron:build:dir && npm run msix:pack",
+    "electron:build:dir:x64": "vite build && electron-builder --dir --x64",
+    "electron:build:dir:arm64": "vite build && electron-builder --dir --arm64",
+    "msix:pack:x64": "npx winapp pack ./release/win-unpacked --arch x64 --generate-cert --output release/QuietMark-x64.msix",
+    "msix:pack:arm64": "npx winapp pack ./release/win-arm64-unpacked --arch arm64 --generate-cert --output release/QuietMark-arm64.msix",
+    "msix:build:x64": "npm run electron:build:dir:x64 && npm run msix:pack:x64",
+    "msix:build:arm64": "npm run electron:build:dir:arm64 && npm run msix:pack:arm64",
     "mas:build": "vite build && electron-builder --mac mas",
     "mas:build:dir": "vite build && electron-builder --mac mas --dir"
   },
@@ -56,7 +60,7 @@
   "build": {
     "appId": "com.alvinashcraft.markdownwriter",
     "productName": "QuietMark",
-    "buildVersion": "3",
+    "buildVersion": "1",
     "files": [
       "dist/**/*",
       "electron/**/*",
