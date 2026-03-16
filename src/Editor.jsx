@@ -48,7 +48,6 @@ const Editor = forwardRef(function Editor(
 ) {
   const containerRef = useRef(null);
   const viewRef = useRef(null);
-  const isInternalUpdate = useRef(false);
   const themeCompartment = useRef(new Compartment());
 
   // Keep stable refs to callbacks so we don't recreate the editor when they change
@@ -112,7 +111,6 @@ const Editor = forwardRef(function Editor(
         EditorView.lineWrapping,
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
-            isInternalUpdate.current = true;
             onChangeRef.current(update.state.doc.toString());
           }
           if (update.selectionSet || update.docChanged) {
@@ -144,14 +142,10 @@ const Editor = forwardRef(function Editor(
     });
   }, [darkMode]);
 
-  // Sync external value changes (e.g. file open)
+  // Sync external value changes (e.g. file open, new file)
   useEffect(() => {
     const view = viewRef.current;
     if (!view) return;
-    if (isInternalUpdate.current) {
-      isInternalUpdate.current = false;
-      return;
-    }
     const currentDoc = view.state.doc.toString();
     if (value !== currentDoc) {
       view.dispatch({

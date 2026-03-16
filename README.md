@@ -2,7 +2,7 @@
 
 A distraction-free markdown editor with live preview, built with React, Vite, and Electron. Features Fluent UI styling, CodeMirror 6 editing, and MSIX packaging for Windows.
 
-![QuietMark](markdown_editor_mvp.png)
+![QuietMark](./Assets/Square44x44Logo.png)
 
 ## Features
 
