@@ -1,8 +1,13 @@
 # QuietMark
 
-A distraction-free markdown editor with live preview, built with React, Vite, and Electron. Features Fluent UI styling, CodeMirror 6 editing, and MSIX packaging for Windows.
+A distraction-free markdown editor with live preview, built with React, Vite, and Electron. Features Fluent UI styling, CodeMirror 6 editing, and native packaging for Windows and macOS.
 
 ![QuietMark](./Assets/Square44x44Logo.png)
+
+## Download
+
+- **Windows** — [Microsoft Store](https://apps.microsoft.com/detail/9NVXFP240P75)
+- **macOS** — [Mac App Store](https://apps.apple.com/us/app/quietmark/id6760240894?mt=12)
 
 ## Features
 
@@ -11,6 +16,7 @@ A distraction-free markdown editor with live preview, built with React, Vite, an
 - **Fluent UI** — Native-feeling interface with platform-adaptive styling (Mica on Windows, vibrancy on macOS)
 - **Dark mode** — System detection with manual toggle, persisted to localStorage
 - **File operations** — Open, Save, Save As with dirty-state tracking and unsaved-changes dialog
+- **Session restore** — Automatically reopens the last edited file on launch
 - **Export** — Standalone HTML and PDF export via File menu
 - **Auto-save** — Drafts saved to localStorage with debounced writes; crash recovery on restart
 - **Word & character count** — Status bar with live word/char counts and selection stats
@@ -28,7 +34,7 @@ A distraction-free markdown editor with live preview, built with React, Vite, an
 ### Install
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/alvinashcraft/markdown-writer.git
 cd markdown-writer
 npm install
 ```
@@ -42,6 +48,14 @@ npm run dev
 # Electron desktop app
 npm run electron:dev
 ```
+
+### Browser Mode
+
+Running `npm run dev` serves QuietMark at `http://localhost:5173`. The editor, live preview, dark mode, formatting, and draft auto-save all work in the browser. File open/save and export require the Electron shell and are disabled in browser mode.
+
+### Dev Container / Codespaces
+
+The repo includes a `.devcontainer` configuration (Node 22, port 5173 forwarded). Open in GitHub Codespaces or VS Code Dev Containers, then run `npm run dev` to start the browser-based editor.
 
 ### Build & Package
 

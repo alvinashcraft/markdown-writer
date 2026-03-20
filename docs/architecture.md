@@ -16,7 +16,7 @@ QuietMark is a two-process Electron app with a React renderer.
 ├─────────────────────────────────────────────┤
 │  Preload (electron/preload.cjs)             │
 │  - contextBridge: electronAPI               │
-│  - IPC invoke (file:open, file:save, etc.)  │
+│  - IPC invoke (file:open, file:read, file:save)│
 │  - IPC on (menu events, language change)    │
 │  - Platform identifier                      │
 ├─────────────────────────────────────────────┤
@@ -38,7 +38,7 @@ The renderer detects Electron via `window.electronAPI` and gracefully degrades i
 No state library — just `useState` + a `stateRef` pattern. A mutable ref (`stateRef.current`) holds the latest state so stable `useCallback(fn, [])` handlers always read fresh values without re-registering IPC listeners.
 
 ### CodeMirror two-way sync
-The editor uses an `isInternalUpdate` ref to distinguish between user typing (internal) and external value changes (file open). Internal changes propagate up via `onChange`; external changes dispatch a CodeMirror transaction. Callback refs (`onChangeRef`, `onSelectionChangeRef`) avoid recreating the EditorView when parent callbacks change.
+External value changes (file open, new file) are synced by comparing the incoming `value` prop against `view.state.doc.toString()` — if they differ, a transaction replaces the document. User typing triggers `onChange` which updates React state; the subsequent effect sees the value already matches CodeMirror and is a no-op. Callback refs (`onChangeRef`, `onSelectionChangeRef`) avoid recreating the EditorView when parent callbacks change.
 
 ### Theme architecture
 Two systems coexist:

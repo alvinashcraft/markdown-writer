@@ -83,4 +83,4 @@ npx winapp cert install ./devcert.pfx
 | Icon not showing in dev mode | The `icon` property in `BrowserWindow` options must point to `Assets/icon512.png` |
 | MSIX install fails | Install the dev cert first: `npx winapp cert install ./devcert.pfx` (admin) |
 | Language change doesn't update menus | Verify `language:change` IPC handler calls `buildMenu()` in `main.cjs` |
-| CodeMirror content out of sync | Check `isInternalUpdate` ref logic in `Editor.jsx` |
+| CodeMirror content out of sync | Check the value-comparison sync logic in the `useEffect([value])` hook in `Editor.jsx` |

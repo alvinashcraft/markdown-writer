@@ -40,14 +40,14 @@ Type markdown text → see it rendered in real-time on the right panel.
 - [ ] Builds with `npm run build`
 - [ ] No console errors
 
-## Out of Scope (for this MVP)
-- File save/load functionality (Electron integration)
-- Syntax highlighting in the editor textarea
-- Export to HTML/PDF
+## Out of Scope (for the original MVP — now shipped in v1.0+)
+- ~~File save/load functionality (Electron integration)~~ ✅ Shipped
+- ~~Syntax highlighting in the editor textarea~~ ✅ Shipped (CodeMirror 6)
+- ~~Export to HTML/PDF~~ ✅ Shipped
 - Mobile-responsive layout
-- Dark mode toggle
-- localStorage persistence
-- Word/character count
+- ~~Dark mode toggle~~ ✅ Shipped
+- ~~localStorage persistence~~ ✅ Shipped
+- ~~Word/character count~~ ✅ Shipped
 
 ## Future Electron Integration Notes
 The toolbar is designed to accommodate:

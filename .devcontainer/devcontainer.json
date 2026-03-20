@@ -1,5 +1,5 @@
 {
-  "name": "Vibe Coding Starter",
+  "name": "QuietMark",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
   "features": {},
   "postCreateCommand": "npm install",

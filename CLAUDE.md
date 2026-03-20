@@ -47,7 +47,7 @@ Renderer (src/ — React)
 
 **`stateRef` for stable IPC callbacks** (`src/App.jsx`): IPC listeners are registered once (empty `useCallback` deps) but still read fresh state by keeping a `stateRef.current` in sync. This avoids re-registering listeners on every render.
 
-**CodeMirror two-way sync** (`src/Editor.jsx`): An `isInternalUpdate` ref prevents feedback loops when the parent sets value vs. the user types. Themes hot-swap via a `Compartment` without recreating the editor. The component exposes an imperative handle (`applyFormat`, `focus`) via `useImperativeHandle`.
+**CodeMirror two-way sync** (`src/Editor.jsx`): External value changes (e.g. file open, new file) are synced by comparing the incoming `value` prop against `view.state.doc.toString()` — if they differ, a transaction replaces the document. User typing triggers `onChange` which updates React state; the subsequent effect sees the value already matches CodeMirror and is a no-op. Themes hot-swap via a `Compartment` without recreating the editor. The component exposes an imperative handle (`applyFormat`, `focus`) via `useImperativeHandle`.
 
 **Dual theme system** (`src/App.jsx`, `App.css`): CSS custom properties toggled via `data-theme="dark"` on `<html>` handle custom elements; a separate Fluent UI `<FluentProvider>` theme controls Fluent components; CodeMirror theme swaps independently via Compartment.
 

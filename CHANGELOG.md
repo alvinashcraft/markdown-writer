@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Quit from app menu (macOS)** — `QuietMark > Quit` now fully quits the app instead of leaving it lingering in the dock
 - **Save dialog default path (Windows)** — Save As now defaults to the user's Documents folder, preferring OneDrive Documents when available
 - **CRLF normalization** — File reads now normalize `\r\n` to `\n` to prevent false dirty-state detection on Windows
+- **Editor sync on File > New** — Removed stale `isInternalUpdate` flag that could prevent CodeMirror from clearing when switching to a new document
 - **Auto-save draft logic** — Drafts are no longer saved to localStorage when editing a named file, preventing stale draft restoration
 
 ### Changed
