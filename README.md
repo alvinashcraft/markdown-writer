@@ -20,7 +20,7 @@ A distraction-free markdown editor with live preview, built with React, Vite, an
 - **Export** — Standalone HTML and PDF export via File menu
 - **Auto-save** — Drafts saved to localStorage with debounced writes; crash recovery on restart
 - **Word & character count** — Status bar with live word/char counts and selection stats
-- **Localization** — English and Spanish with framework for adding more languages
+- **Localization** — English and Spanish languages with framework for adding more languages
 - **Keyboard shortcuts** — Standard accelerators (Ctrl/⌘+S, O, N, B, I, Shift+D)
 - **MSIX packaging** — Windows packaging with winapp CLI, file associations for `.md`/`.markdown`
 
